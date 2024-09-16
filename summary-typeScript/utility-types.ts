@@ -81,9 +81,9 @@ const userAges: Record<number, string> = {
 
 // 7. Exclude<T, U>
 // Constructs a type by excluding from T all types that are assignable to U.
-/* type T = 'a' | 'b' | 'c';
+type T = 'a' | 'b' | 'c';
 type U = 'a';
-type Excluded = Exclude<T, U>; // 'b' | 'c' */
+type Excluded = Exclude<T, U>; // 'b' | 'c'
 
 // 8. Extract<T, U>
 // Constructs a type by extracting from T all types that are assignable to U.
@@ -150,3 +150,71 @@ const objt: ObjectWithThis = {
     this.value++;
   }
 };
+
+// Pick and Omit => both Omit and Pick are utility types that allow you to create new types based on 
+//                  existing ones by excluding or including specific properties.
+
+type User = {
+  id: number;
+  firstNAme: string;
+  hashedPassword: string;
+  createdAt: string;
+}
+type Prospect = {
+  id: number;
+  firstName: string;
+  lastName: string;
+  referrer: 'invite' | 'ad';
+}
+
+//1- define the types exported from your API
+
+export type RenderUser = Pick<User, 'firstName' | 'lastName'>
+export type RenderedProspect = Omit<Prospect, 'id'>
+
+//typing field transformations // Omit<Type, Keys>
+
+//You can also omit multiple properties by using a union (|) of keys.
+type RenderedUSer2 = Omit<User, 'createdAt' | 'hashedPasswprd'> & {
+  createdAt: Date
+}
+
+declare function hydrateUser(r: User): RenderedUser;
+
+declare function removeDates<
+  T extends {createdAt?: Date, updatedAt?: Date}>(obj: T): Omit<T, 'createdAt' | 'updatedAt'>
+
+//  Pick<Type, Keys>
+//Purpose: Creates a new type by including (selecting) only specific properties from an existing type.
+
+/*
+Syntax: Pick<Type, Keys>
+Type: The original type you want to derive from.
+Keys: The property or properties you want to include.
+*/
+
+type User = {
+    id: number;
+    name: string;
+    email: string;
+    role: string;
+};
+
+type UserWithEmail = Pick<User, 'email'>;
+
+// Resulting type:
+type UserWithEmail = {
+    email: string;
+};
+
+//Summary:
+// Omit: Excludes properties from a type.
+// Pick: Selects properties from a type.
+
+
+
+
+
+
+
+
